@@ -1,15 +1,10 @@
-
+//Use encryptData() to encrypt your data and then send it.
 
 #include <esp_now.h>
 #include <WiFi.h>
 
 uint8_t broadcastAddress[] = {{MAC_C}};
-
-const char* aes_key = "12345678901234567890123456789012"; // 32-byte key
-const char* root_ca = \
-"-----BEGIN CERTIFICATE-----\n" \
-"PASTE_YOUR_CA_CRT_HERE\n" \
-"-----END CERTIFICATE-----";
+const char* aes_key = {{KEY_C}}; // 32-byte key
 
 
 void setClock() {
