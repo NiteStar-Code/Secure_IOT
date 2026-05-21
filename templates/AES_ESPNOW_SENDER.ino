@@ -1,5 +1,4 @@
 //Use encryptData() to encrypt your data and then send it.
-
 #include <esp_now.h>
 #include <WiFi.h>
 
