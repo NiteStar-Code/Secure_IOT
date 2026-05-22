@@ -1,9 +1,19 @@
-//Use encryptData() to encrypt your data and then send it.
+//Sends random encrypted integers via ESPNow
+
 #include <esp_now.h>
 #include <WiFi.h>
+#include "mbedtls/gcm.h" // Required for AES-GCM encryption
+#include <base64.h>      // Required for base64::encode
 
-uint8_t broadcastAddress[] = {{MAC_C}};
-const char* aes_key = {{KEY_C}}; // 32-byte key
+uint8_t broadcastAddress[] = {0x4C, 0X11, 0XAE, 0X70, 0X1C, 0XD8};
+
+// FIXED: Changed from 'const char*' to a byte array 'const uint8_t aes_key[]'
+const uint8_t aes_key[] = {
+    0xB4, 0xCC, 0x13, 0xDF, 0x27, 0x00, 0xCB, 0x04,
+    0xAA, 0xFF, 0x13, 0xC1, 0xBE, 0x7F, 0xB8, 0xF1,
+    0x68, 0xB5, 0xA9, 0x0E, 0xA4, 0xEF, 0x11, 0x30,
+    0x96, 0xEF, 0xEF, 0x6F, 0xBB, 0x13, 0x3C, 0xEB
+}; // 32-byte key
 
 
 void setClock() {
@@ -32,6 +42,8 @@ String encryptData(String data) {
 
     mbedtls_gcm_context gcm;
     mbedtls_gcm_init(&gcm);
+    
+    // The cast to (const unsigned char*) works perfectly now that aes_key is an array
     mbedtls_gcm_setkey(&gcm, MBEDTLS_CIPHER_ID_AES, (const unsigned char*)aes_key, 256);
     
     mbedtls_gcm_crypt_and_tag(&gcm, MBEDTLS_GCM_ENCRYPT, input_len, iv, 12, NULL, 0, 
