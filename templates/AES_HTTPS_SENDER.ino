@@ -9,9 +9,9 @@ const char* ssid = {{SSID}};
 const char* password = {{PASS}};
 const char* server_url = "https://{{IP}}/api/endpoint"; 
 
-// --- Security Configuration Must be filled by the user---
-const char* aes_key = {{KEY_C}}; // 32-byte key
-const char* root_ca = {{KEY_C}};
+// --- Security Configuration ---
+const uint8_t aes_key[] = {{KEY_C}}; // 32-byte key
+const char* root_ca = {{CA_C}};
 
 // --- Global Objects ---
 WiFiClientSecure espClient;

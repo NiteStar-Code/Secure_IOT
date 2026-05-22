@@ -21,10 +21,19 @@ function genKey() {
   crypto.getRandomValues(arr);
   S.keyBytes = arr;
   S.keyHex = Array.from(arr).map(b => b.toString(16).padStart(2,'0')).join('');
-  const d = document.getElementById('keyDisplay');
-  const i = document.getElementById('keyInfo');
-  if (d) { d.textContent = S.keyHex; }
-  if (i) { i.textContent = `${S.encryption === 'XTEA' ? 'XTEA-128 · 16 bytes' : 'AES-256 · 32 bytes'} · Share with both devices · Keep secret`; }
+  const input = document.getElementById('keyInput');
+  const info = document.getElementById('keyInfo');
+  if (input) { input.value = S.keyHex; }
+  if (info) { info.textContent = `${S.encryption === 'XTEA' ? 'XTEA-128 · 16 bytes' : 'AES-256 · 32 bytes'} · Share with both devices · Keep secret`; }
+}
+
+function updateKeyFromInput(val) {
+  S.keyHex = val.replace(/[^0-9A-Fa-f]/g, '');
+  const bytes = [];
+  for (let i = 0; i < S.keyHex.length; i += 2) {
+    bytes.push(parseInt(S.keyHex.substr(i, 2), 16));
+  }
+  S.keyBytes = new Uint8Array(bytes);
 }
 
 function regenKey() {
@@ -34,6 +43,7 @@ function regenKey() {
 }
 
 function keyToC() {
+  if (!S.keyBytes || S.keyBytes.length === 0) return '{ }';
   const hex = Array.from(S.keyBytes).map(b => '0x' + b.toString(16).padStart(2,'0').toUpperCase());
   const rows = [];
   for (let i = 0; i < hex.length; i += 8) rows.push('    ' + hex.slice(i, i+8).join(', '));
@@ -70,7 +80,15 @@ function goNext() {
   if (cur === 3 && !S.role)       { flashMsg('Please select a device role.', true); return; }
   clearMsg();
   if (cur === 2) buildRoleStep();
-  if (cur === 3) { buildConfigForm(); genKey(); }
+  if (cur === 3) { 
+    buildConfigForm(); 
+    if (!S.keyHex) genKey(); 
+    else {
+      // If we already have a key, just update the display
+      const input = document.getElementById('keyInput');
+      if (input) input.value = S.keyHex;
+    }
+  }
   S.step++;
   render();
 }

@@ -112,9 +112,9 @@
   <div class="key-box">
     <div class="key-header">
       <div class="key-dot"></div>
-      <div class="key-label-text">Auto-Generated Secret Key</div>
+      <div class="key-label-text">Secret Key (Hex)</div>
     </div>
-    <div class="key-val" id="keyDisplay">—</div>
+    <input class="key-val" id="keyInput" placeholder="Paste your hex key here..." oninput="updateKeyFromInput(this.value)">
     <div class="key-info" id="keyInfo">—</div>
     <div class="key-actions">
       <button class="btn btn-sm btn-teal" id="copyKeyBtn" onclick="copyKey(this)">⧉ Copy Key</button>
